@@ -6,7 +6,7 @@ from debug import debug
 
 log.print_to_stderr = False
 SIZE: tuple[int, int] = (256, 256)
-SCALE_DIFF_MAX: float = 1.05
+SCALE_DIFF_MAX: float = 1.45
 
 
 def make_show(scale_x: float, scale_y: float, margin_x: int, margin_y: int) -> Callable[
