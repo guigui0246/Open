@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+markers = [
+    "debug: Debug functions",
+]
+addopts = "-p no:warnings --cov=. --cov-report term-missing:skip-covered --no-cov-on-fail"
