@@ -1,8 +1,8 @@
-from typing import Any, Callable, List
+from typing import Callable, Dict, List
 import pygame
-import os
 import debug as log
 from debug import debug
+from sprite import Sprite
 
 log.print_to_stderr = False
 SIZE: tuple[int, int] = (256, 256)
@@ -19,7 +19,7 @@ def make_show(scale_x: float, scale_y: float, margin_x: int, margin_y: int) -> C
     return _show
 
 
-def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size: tuple[int, int], elem: List[Any]):
+def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size: tuple[int, int], elem: List[Sprite]):
     margin_x: int = 0
     margin_y: int = 0
     scale_x: float = size[0] / SIZE[0]
@@ -36,7 +36,7 @@ def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size
     show: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None]
     show = make_show(scale_x, scale_y, margin_x, margin_y)
     for e in elem:
-        show(screen, e, (0, 0), (256, 256))
+        e.show(show, screen)
 
 
 def main():
@@ -46,9 +46,11 @@ def main():
     screen: pygame.Surface = pygame.display.set_mode(size, pygame.RESIZABLE)
     clock: pygame.time = pygame.time.Clock()
     events: List[pygame.event.Event] = pygame.event.get()
-    elem: List[Any] = [pygame.image.load(os.path.join(os.path.dirname(__file__), "assets/first_room.png"))]
-    elemToShow: List[Any] = []
-    elemToShow.append(elem[0])
+    elem: Dict[str, Sprite] = {
+        "first_room": Sprite("assets/first_room.png")
+    }
+    elemToShow: List[Sprite] = []
+    elemToShow.append(elem["first_room"])
     while not len(list(filter(lambda a: a.type == pygame.QUIT, events))):
         size = screen.get_size()
         events = pygame.event.get()
