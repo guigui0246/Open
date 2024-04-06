@@ -16,8 +16,11 @@ class Sprite():
         self._size = self._sprite.get_size()
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
-             screen: pygame.Surface) -> None:
-        show_function(screen, self._sprite, self._pos, self._size)
+             screen: pygame.Surface, reverse: bool = False) -> None:
+        sprite = self._sprite
+        if reverse:
+            sprite = pygame.transform.flip(sprite, 1, 0)
+        show_function(screen, sprite, self._pos, self._size)
 
     @property
     # Size of the sprite
@@ -92,7 +95,7 @@ class AnimatedSprite(Sprite):
         self._speed = framerate
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
-             screen: pygame.Surface) -> None:
+             screen: pygame.Surface, reverse: bool = False) -> None:
         while (time.time() - self._clock) > len(self._asset_list) * (1 / self._speed):
             self._clock += len(self._asset_list) * (1 / self._speed)
         while (time.time() - self._clock) > (1 / self._speed):
@@ -101,7 +104,7 @@ class AnimatedSprite(Sprite):
         if len(self._asset_list) >= self._asset_id:
             self._asset_id = 0
         self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._asset_list[self._asset_id]))
-        Sprite.show(self, show_function, screen)
+        Sprite.show(self, show_function, screen, reverse)
 
     @property
     # Speed of the animation in frame per second
