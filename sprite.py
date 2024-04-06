@@ -1,6 +1,7 @@
 from typing import Callable, Sequence
 import pygame
 import os
+import time
 
 
 class Sprite():
@@ -77,3 +78,54 @@ class Sprite():
 
     def __str__(self) -> str:
         return f"Sprite(file: {self._sprite}, size: {self.size}, pos: {self.pos})"
+
+
+class AnimatedSprite(Sprite):
+    _asset_list: Sequence[os.PathLike]
+    _asset_id: int = 0
+    _speed: float
+    _clock: float = time()
+
+    def __init__(self, assets: Sequence[os.PathLike], framerate: float) -> None:
+        super().__init__(assets[0])
+        self._asset_list = assets
+        self._speed = framerate
+
+    def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
+             screen: pygame.Surface) -> None:
+        while (time() - self._clock) > len(self._asset_list) * (1 / self._speed):
+            self._clock += len(self._asset_list) * (1 / self._speed)
+        while (time() - self._clock) > (1 / self._speed):
+            self._asset_id += 1
+            self._clock += (1 / self._speed)
+        if len(self._asset_list) >= self._asset_id:
+            self._asset_id = 0
+        super()._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._asset_list[self._asset_id]))
+        super().show(show_function, screen)
+
+    @property
+    # Speed of the animation in frame per second
+    def speed(self) -> float:
+        return self._speed
+
+    @speed.setter
+    def speed(self, value: float) -> None:
+        self._speed = value
+
+    @property
+    # Speed of the animation in frame per second
+    def frame(self) -> float:
+        return self._speed
+
+    @frame.setter
+    def frame(self, value: float) -> None:
+        self._speed = value
+
+    @property
+    # Speed of the animation in frame per second
+    def framerate(self) -> float:
+        return self._speed
+
+    @framerate.setter
+    def framerate(self, value: float) -> None:
+        self._speed = value
