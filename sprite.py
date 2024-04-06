@@ -34,7 +34,7 @@ class Sprite():
                 raise IndexError("A Size value must have exactly 2 int values")
             if not (isinstance(value[0], int) and isinstance(value[1], int)):
                 raise ValueError("Values are not all int")
-            self._size = tuple(value)
+            self._size = (value[0], value[1])
             return
         raise ValueError("Cannot parse value")
 
@@ -58,7 +58,7 @@ class Sprite():
                 raise IndexError("A Size value must have exactly 2 int values")
             if not (isinstance(value[0], int) and isinstance(value[1], int)):
                 raise ValueError("Values are not all int")
-            self._pos = tuple(value)
+            self._pos = (value[0], value[1])
             return
         raise ValueError("Cannot parse value")
 
@@ -72,7 +72,7 @@ class Sprite():
                 raise IndexError("A Size value must have exactly 2 int values")
             if not (isinstance(value[0], int) and isinstance(value[1], int)):
                 raise ValueError("Values are not all int")
-            self._pos = tuple(value)
+            self._pos = (value[0], value[1])
             return
         raise ValueError("Cannot parse value")
 
@@ -84,7 +84,7 @@ class AnimatedSprite(Sprite):
     _asset_list: Sequence[os.PathLike]
     _asset_id: int = 0
     _speed: float
-    _clock: float = time()
+    _clock: float = time.time()
 
     def __init__(self, assets: Sequence[os.PathLike], framerate: float) -> None:
         super().__init__(assets[0])
@@ -93,15 +93,15 @@ class AnimatedSprite(Sprite):
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
              screen: pygame.Surface) -> None:
-        while (time() - self._clock) > len(self._asset_list) * (1 / self._speed):
+        while (time.time() - self._clock) > len(self._asset_list) * (1 / self._speed):
             self._clock += len(self._asset_list) * (1 / self._speed)
-        while (time() - self._clock) > (1 / self._speed):
+        while (time.time() - self._clock) > (1 / self._speed):
             self._asset_id += 1
             self._clock += (1 / self._speed)
         if len(self._asset_list) >= self._asset_id:
             self._asset_id = 0
-        super()._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._asset_list[self._asset_id]))
-        super().show(show_function, screen)
+        self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._asset_list[self._asset_id]))
+        Sprite.show(self, show_function, screen)
 
     @property
     # Speed of the animation in frame per second
