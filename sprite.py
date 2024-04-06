@@ -11,7 +11,7 @@ class Sprite():
 
     def __init__(self, asset: os.PathLike) -> None:
         self._path = asset
-        self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._sprite))
+        self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._path))
         self._size = self._sprite.get_size()
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
