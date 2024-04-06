@@ -50,28 +50,28 @@ class Sprite():
     @position.setter
     def position(self, value: pygame.Rect | Sequence[int]) -> None:
         if isinstance(value, pygame.Rect):
-            self._size = (value.x, value.y)
+            self._pos = (value.x, value.y)
             return
         if isinstance(value, Sequence):
             if len(value) != 2:
                 raise IndexError("A Size value must have exactly 2 int values")
             if not (isinstance(value[0], int) and isinstance(value[1], int)):
                 raise ValueError("Values are not all int")
-            self._size = tuple(value)
+            self._pos = tuple(value)
             return
         raise ValueError("Cannot parse value")
 
     @pos.setter
     def pos(self, value: pygame.Rect | Sequence[int]) -> None:
         if isinstance(value, pygame.Rect):
-            self._size = value.size
+            self._pos = (value.x, value.y)
             return
         if isinstance(value, Sequence):
             if len(value) != 2:
                 raise IndexError("A Size value must have exactly 2 int values")
             if not (isinstance(value[0], int) and isinstance(value[1], int)):
                 raise ValueError("Values are not all int")
-            self._size = tuple(value)
+            self._pos = tuple(value)
             return
         raise ValueError("Cannot parse value")
 

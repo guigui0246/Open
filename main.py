@@ -47,7 +47,7 @@ def main():
     clock: pygame.time = pygame.time.Clock()
     events: List[pygame.event.Event] = pygame.event.get()
     elem: Dict[str, Sprite] = {
-        "first_room": Sprite("assets/first_room.png")
+        "first_room": Sprite("assets/first_room.png"),
     }
     elemToShow: List[Sprite] = []
     elemToShow.append(elem["first_room"])
