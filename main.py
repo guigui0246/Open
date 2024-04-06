@@ -67,7 +67,7 @@ def main():
     events: List[pygame.event.Event] = pygame.event.get()
     elem: Dict[str, Sprite] = {
         "first_room": Sprite("assets/first_room.png"),
-        "player": Player(["assets/first_room.png"], 3, (150, 150)),
+        "player": Player(3, (150, 150)),
         "map": Map("assets/first_room.png"),
     }
     if isinstance(elem["map"], Map):
