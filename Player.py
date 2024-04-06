@@ -8,8 +8,8 @@ from map import Map
 
 GRAVITY: float = 9.8
 JUMP_HEIGHT = GRAVITY * 3
-MOVE: Sequence[PathLike] = []
-IMMOBILE: PathLike = ""
+MOVE: Sequence[PathLike] = ["./assets/sprite_sheet_chest.png"]
+IMMOBILE: PathLike = "./assets/sprite_sheet_chest.png"
 
 
 class Player(AnimatedSprite):
