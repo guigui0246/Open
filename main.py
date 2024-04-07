@@ -114,6 +114,8 @@ def main():
             pygame.Rect(179, 172, 76, 22),
             pygame.Rect(183, 131, 25, 14),
             pygame.Rect(224, 103, 20, 11),
+            pygame.Rect(165, 85, 17, 5),
+            pygame.Rect(0, 72, 146, 10),
         ]
     if isinstance(elem["final_room"], Map):
         elem["final_room"].collisions = [
