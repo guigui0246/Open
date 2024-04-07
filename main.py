@@ -74,6 +74,7 @@ def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size
 
 
 def main():
+    global BACKGROUND
     size: tuple[int, int] = SIZE
     tick: int = 0
     pygame.init()

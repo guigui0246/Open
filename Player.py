@@ -43,9 +43,9 @@ class Player(AnimatedSprite):
 
     def against_wall(self, reverse: bool, map: Map) -> bool:
         if (reverse):
-            rect = pygame.Rect(self.pos[0] - 1, self.pos[1], 1, self.pos[1] + self.size[1])
+            rect = pygame.Rect(self.pos[0] - 1, self.pos[1], 1, self.size[1])
         else:
-            rect = pygame.Rect(self.pos[0] + self.size[0], self.pos[1], 1, self.pos[1] + self.size[1])
+            rect = pygame.Rect(self.pos[0] + self.size[0], self.pos[1], 1, self.size[1])
         if len(rect.collidelistall(map.collisions)) != 0:
             debug(rect, "Collision with")
             for i in rect.collidelistall(map.collisions):
@@ -80,7 +80,7 @@ class Player(AnimatedSprite):
                 break
         reverse: bool = self._speed_move < 0
         x = abs(self._speed_move)
-        if x != 0:
+        if x > 0:
             if reverse:
                 self._direction = DIRECTION_LEFT
             else:
