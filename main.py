@@ -115,6 +115,7 @@ def main():
             elem["map"] = elem["second_room"]
             elemToShow[0] = elem["map"]
             pygame.event.set_allowed(pygame.KEYDOWN)
+            elem["player"].pos = (230, 230)
         events = pygame.event.get()
         screen.fill("white")
         update_screen(screen, events, size, elem, elemToShow)

@@ -31,8 +31,8 @@ class Player(AnimatedSprite):
             self._jump += JUMP_HEIGHT
 
     def _update_on_ground(self, map: Map) -> None:
-        rect = pygame.Rect(self.pos[0], self.pos[1] + self.size[1], self.size[0], 1)
-        if len(rect.collidelistall(map.collisions)) == 0:
+        rect = pygame.Rect(self.pos[0], self.pos[1] + self.size[1] + 1, self.size[0], 1)
+        if len(rect.collidelistall(map.collisions)) != 0:
             debug(rect, "Collision with")
             for i in rect.collidelistall(map.collisions):
                 debug(map.collisions[i])
@@ -59,6 +59,7 @@ class Player(AnimatedSprite):
         debug()
         debug("Player move() call ")
         self._update_on_ground(map)
+        debug(f"{self._on_ground}")
         if self._on_ground:
             self._gravity = 0
             self._jump = 0
@@ -70,6 +71,10 @@ class Player(AnimatedSprite):
         while jump > 0:
             self.pos = (self.pos[0], int(self.pos[1] - 1))
             jump -= 1
+            self._update_on_ground(map)
+        while jump < 0:
+            self.pos = (self.pos[0], int(self.pos[1] + 1))
+            jump += 1
             self._update_on_ground(map)
             if self._on_ground:
                 break
