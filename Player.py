@@ -1,15 +1,17 @@
 import pygame
-import os
 from os import PathLike
 from typing import Callable, Sequence
 from debug import debug
 from sprite import AnimatedSprite, Sprite
 from map import Map
+from spritesheet import spritesheet
 
 GRAVITY: float = 9.8
 JUMP_HEIGHT = GRAVITY * 3
-MOVE: Sequence[PathLike] = ["./assets/sprite_sheet_chest.png"]
-IMMOBILE: PathLike = "./assets/sprite_sheet_chest.png"
+SPRITES: PathLike = "./assets/sprite_sheet_chest.png"
+DIRECTION_LEFT: int = 1
+DIRECTION_RIGHT: int = 2
+DIRECTION_STILL: int = 3
 
 
 class Player(AnimatedSprite):
@@ -17,11 +19,13 @@ class Player(AnimatedSprite):
     _gravity: float = 0
     _jump: float = 0
     _speed_move: float = 0
-    _direction: int = pygame.K_DOWN
+    _direction: int = DIRECTION_STILL
+    _sheet: spritesheet
 
     def __init__(self, framerate: float, starting_position: pygame.Rect | Sequence[int]) -> None:
-        super().__init__(MOVE, framerate)
+        super().__init__([SPRITES], framerate)
         self.pos = starting_position
+        self._sheet = spritesheet(SPRITES)
 
     def jump(self) -> None:
         if self.can_jump():
@@ -72,13 +76,13 @@ class Player(AnimatedSprite):
                 break
         reverse: bool = self._speed_move < 0
         x = abs(self._speed_move)
-        if x > 0:
+        if x != 0:
             if reverse:
-                self._direction = pygame.K_LEFT
+                self._direction = DIRECTION_LEFT
             else:
-                self._direction = pygame.K_RIGHT
+                self._direction = DIRECTION_RIGHT
         else:
-            self._direction = pygame.K_DOWN
+            self._direction = DIRECTION_STILL
         debug(f"{reverse = } {x = }")
         while x > 0:
             if self.against_wall(reverse, map):
@@ -90,10 +94,12 @@ class Player(AnimatedSprite):
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
              screen: pygame.Surface) -> None:
-        if self._direction:
-            AnimatedSprite.show(self, show_function, screen, self._direction == pygame.K_LEFT)
+        debug(f"Showing player at {self.pos = } with {self.size = } and {self._direction = }")
+        if self._direction == DIRECTION_STILL:
+            self._sprite = self._sheet.image_at(pygame.Rect(0, 16, 16, 16))
+            Sprite.show(self, show_function, screen, self._direction == DIRECTION_LEFT)
         else:
-            self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), IMMOBILE))
+            self._sprite = self._sheet.image_at(pygame.Rect(0, 0, 16, 16))
             Sprite.show(self, show_function, screen)
 
     def can_jump(self) -> bool:
