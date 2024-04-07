@@ -105,14 +105,21 @@ def main():
     if isinstance(elem["second_room"], Map):
         elem["second_room"].collisions = [
             pygame.Rect(-200, 255, 2000, 2000),
-            pygame.Rect(0, -200, 0, 2000),
-            pygame.Rect(255, -200, 0, 2000),
+            pygame.Rect(-200, -200, 200, 2000),
+            pygame.Rect(255, -200, 2000, 2000),
+            pygame.Rect(0, 225, 67, 30),
+            pygame.Rect(0, 194, 33, 30),
+            pygame.Rect(70, 180, 34, 5),
+            pygame.Rect(120, 168, 41, 5),
+            pygame.Rect(179, 172, 76, 22),
+            pygame.Rect(183, 131, 25, 14),
+            pygame.Rect(224, 103, 20, 11),
         ]
     if isinstance(elem["final_room"], Map):
         elem["final_room"].collisions = [
             pygame.Rect(-200, 255, 2000, 2000),
-            pygame.Rect(0, -200, 0, 2000),
-            pygame.Rect(255, -200, 0, 2000),
+            pygame.Rect(-200, -200, 200, 2000),
+            pygame.Rect(255, -200, 2000, 2000),
         ]
     elem["zombies"].pos = (68, 226)
     elem["zombies"].size = (32, 32)
@@ -151,6 +158,7 @@ def main():
     elemToShow.append(elem["voleur_crowbar"])
     startboss: bool = False
     endboss: bool = False
+    boss: bool = False
     while not len(list(filter(lambda a: a.type == pygame.QUIT, events))):
         size = screen.get_size()
         if tick == 1 * FRAMERATE:
@@ -204,6 +212,7 @@ def main():
             elemToShow.remove(elem["porte_fin"])
             elemToShow.append(elem["voleur"])
             startboss = False
+            boss = True
         if endboss and tick > 5 * FRAMERATE:
             elemToShow.remove(elem["final_room"])
             elemToShow.remove(elem["voleur"])
@@ -221,6 +230,12 @@ def main():
             BACKGROUND = pygame.Color(255, 255, 255)
             elemToShow.append(Sprite("assets/hoppy.png"))
             tick = 0
+        if boss:
+            rect = pygame.Rect(32, 232, 32, 1)
+            rect2 = pygame.Rect(elem["player"].pos, elem["player"].size)
+            if rect.colliderect(rect2):
+                endboss = True
+                boss = False
         events = pygame.event.get()
         screen.fill(BACKGROUND)
         update_screen(screen, events, size, elem, elemToShow)
