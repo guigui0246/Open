@@ -83,9 +83,10 @@ def main():
     elem: Dict[str, Sprite] = {
         "first_room": Map("assets/first_room.png"),
         "player": Player(3, (150, 150)),
-        "second_room": Map("assets/second_room.png"),
+        "second_room": Map("assets/background_no_enemies_grey.png"),
         "final_room": Map("assets/final_room.png"),
         "gros_cochon": Sprite("assets/gros_cochon.png"),
+        "soucoupe_volante": Sprite("assets/soucoupe_volante.png"),
         "pti_robot": Sprite("assets/pti_robot.png"),
         "zombies": AnimatedSprite(["assets/zombie_sprite_1.png", "assets/zombie_sprite_2.png"], 3),
         "voleur": AnimatedSprite(["assets/voleur.png", "assets/voleur_2.png", "assets/voleur_3.png"], 3),
@@ -109,16 +110,24 @@ def main():
             pygame.Rect(0, -200, 0, 2000),
             pygame.Rect(255, -200, 0, 2000),
         ]
+    elem["zombies"].pos = (68, 226)
+    elem["zombies"].size = (32, 32)
+    elem["soucoupe_volante"].pos = (132, 130)
+    elem["soucoupe_volante"].size = (16, 11)
+    elem["pti_robot"].pos = (219, 139)
+    elem["pti_robot"].size = (31, 33)
+    elem["gros_cochon"].pos = (81, 40)
+    elem["gros_cochon"].size = (32, 32)
     elem["coffre1"].pos = (28, 244)
     elem["coffre2"].pos = (72, 244)
     elem["coffre3"].pos = (120, 244)
     elem["coffre4"].pos = (166, 244)
     elem["player"].pos = (214, 244)
-    elem["coffre1"].size = (16, 16)
-    elem["coffre2"].size = (16, 16)
-    elem["coffre3"].size = (16, 16)
-    elem["coffre4"].size = (16, 16)
-    elem["player"].size = (16, 16)
+    elem["coffre1"].size = (16, 12)
+    elem["coffre2"].size = (16, 12)
+    elem["coffre3"].size = (16, 12)
+    elem["coffre4"].size = (16, 12)
+    elem["player"].size = (16, 12)
     elem["map"] = elem["first_room"]
     pygame.event.set_blocked(pygame.KEYDOWN)
     pygame.event.set_allowed(pygame.QUIT)
@@ -135,6 +144,14 @@ def main():
             elemToShow[0] = elem["map"]
             pygame.event.set_allowed(pygame.KEYDOWN)
             elem["player"].pos = (230, 230)
+            elemToShow.remove(elem["coffre1"])
+            elemToShow.remove(elem["coffre2"])
+            elemToShow.remove(elem["coffre3"])
+            elemToShow.remove(elem["coffre4"])
+            elemToShow.append(elem["zombies"])
+            elemToShow.append(elem["soucoupe_volante"])
+            elemToShow.append(elem["pti_robot"])
+            elemToShow.append(elem["gros_cochon"])
         events = pygame.event.get()
         screen.fill("white")
         update_screen(screen, events, size, elem, elemToShow)
