@@ -1,14 +1,15 @@
+import os
 import pygame
 from os import PathLike
 from typing import Callable, Sequence
 from debug import debug
 from sprite import AnimatedSprite, Sprite
 from map import Map
-from spritesheet import spritesheet
 
 GRAVITY: float = 9.8
 JUMP_HEIGHT = GRAVITY * 3
-SPRITES: PathLike = "./assets/sprite_sheet_chest.png"
+SPRITES_STILL: PathLike = "./assets/sprite_sheet_chest.png"
+SPRITES_RIGHT: PathLike = "./assets/sprite_sheet_chest.png"
 DIRECTION_LEFT: int = 1
 DIRECTION_RIGHT: int = 2
 DIRECTION_STILL: int = 3
@@ -20,12 +21,10 @@ class Player(AnimatedSprite):
     _jump: float = 0
     _speed_move: float = 0
     _direction: int = DIRECTION_STILL
-    _sheet: spritesheet
 
     def __init__(self, framerate: float, starting_position: pygame.Rect | Sequence[int]) -> None:
-        super().__init__([SPRITES], framerate)
+        super().__init__([SPRITES_STILL], framerate)
         self.pos = starting_position
-        self._sheet = spritesheet(SPRITES)
 
     def jump(self) -> None:
         if self.can_jump():
@@ -96,10 +95,10 @@ class Player(AnimatedSprite):
              screen: pygame.Surface) -> None:
         debug(f"Showing player at {self.pos = } with {self.size = } and {self._direction = }")
         if self._direction == DIRECTION_STILL:
-            self._sprite = self._sheet.image_at(pygame.Rect(0, 16, 16, 16))
+            self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), SPRITES_RIGHT))
             Sprite.show(self, show_function, screen, self._direction == DIRECTION_LEFT)
         else:
-            self._sprite = self._sheet.image_at(pygame.Rect(0, 0, 16, 16))
+            self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), SPRITES_STILL))
             Sprite.show(self, show_function, screen)
 
     def can_jump(self) -> bool:
