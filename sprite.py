@@ -10,6 +10,7 @@ class Sprite():
     _sprite: pygame.Surface
     _pos: tuple[int, int] = (0, 0)
     _size: tuple[int, int]
+    _reverse: bool = False
 
     def __init__(self, asset: os.PathLike) -> None:
         self._path = asset
@@ -19,9 +20,18 @@ class Sprite():
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
              screen: pygame.Surface, reverse: bool = False) -> None:
         sprite = self._sprite
-        if reverse:
+        if reverse ^ self._reverse:  # Allow reversing twice
             sprite = pygame.transform.flip(sprite, 1, 0)
         show_function(screen, sprite, self._pos, self._size)
+
+    @property
+    # Whether or not to reverse the sprite (it can be reverse in the call of show on top of that)
+    def reverse(self) -> bool:
+        return self._reverse
+
+    @reverse.setter
+    def reverse(self, value: bool) -> None:
+        self._reverse = value
 
     @property
     # Size of the sprite
