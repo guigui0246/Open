@@ -105,7 +105,7 @@ class Player(AnimatedSprite):
         return self._on_ground
 
     @property
-    # Speed of the palyer movement
+    # Speed of the player movement
     def speed(self) -> float:
         return self._speed_move
 

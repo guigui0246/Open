@@ -12,6 +12,7 @@ SCALE_DIFF_MAX: float = 1.45
 SPEED_VALUE: float = 0.3
 MIN_SPEED: float = 0.3
 SLOWDOWN: float = 1.65
+FRAMERATE: int = 60
 
 
 def make_show(scale_x: float, scale_y: float, margin_x: int, margin_y: int) -> Callable[
@@ -47,19 +48,20 @@ def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size
                     elem["player"].jump()
         debug(e)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_RIGHT]:
-        if isinstance(elem["player"], Player):
-            elem["player"].speed += SPEED_VALUE
-    if keys[pygame.K_LEFT]:
-        if isinstance(elem["player"], Player):
-            elem["player"].speed -= SPEED_VALUE
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-        if isinstance(elem["player"], Player):
-            if elem["player"].speed > MIN_SPEED:
-                elem["player"].speed /= SLOWDOWN
-            else:
-                elem["player"].speed = 0
+    if (not pygame.event.get_blocked(pygame.KEYDOWN)):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RIGHT]:
+            if isinstance(elem["player"], Player):
+                elem["player"].speed += SPEED_VALUE
+        if keys[pygame.K_LEFT]:
+            if isinstance(elem["player"], Player):
+                elem["player"].speed -= SPEED_VALUE
+        if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+            if isinstance(elem["player"], Player):
+                if elem["player"].speed > MIN_SPEED:
+                    elem["player"].speed /= SLOWDOWN
+                else:
+                    elem["player"].speed = 0
 
     if isinstance(elem["player"], Player) and isinstance(elem["map"], Map):
         elem["player"].move(elem["map"])
@@ -72,29 +74,53 @@ def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size
 
 def main():
     size: tuple[int, int] = SIZE
+    tick: int = 0
     pygame.init()
     pygame.display.set_caption("Open")
     screen: pygame.Surface = pygame.display.set_mode(size, pygame.RESIZABLE)
     clock: pygame.time.Clock = pygame.time.Clock()
     events: List[pygame.event.Event] = pygame.event.get()
     elem: Dict[str, Sprite] = {
-        "first_room": Sprite("assets/first_room.png"),
+        "first_room": Map("assets/first_room.png"),
         "player": Player(3, (150, 150)),
-        "map": Map("assets/first_room.png"),
+        "second_room": Map("assets/second_room.png"),
+        "final_room": Map("assets/final_room.png"),
+        "gros_cochon": Sprite("assets/gros_cochon.png"),
+        "pti_robot": Sprite("assets/pti_robot.png"),
+        "zombies": Sprite("assets/zombies.png"),
     }
-    if isinstance(elem["map"], Map):
-        elem["map"].collisions = [pygame.Rect(50, 200, 15, 3)]
-    elem["player"].size = (50, 50)
-    elemToShow: List[Sprite] = []
-    elemToShow.append(elem["map"])
+    if isinstance(elem["first_room"], Map):
+        elem["first_room"].collisions = [pygame.Rect(-200, -200, 2000, 2000)]
+    if isinstance(elem["second_room"], Map):
+        elem["second_room"].collisions = [
+            pygame.Rect(-200, 255, 2000, 256),
+            pygame.Rect(0, -200, 0, 2000),
+            pygame.Rect(255, -200, 0, 2000),
+        ]
+    if isinstance(elem["final_room"], Map):
+        elem["final_room"].collisions = [
+            pygame.Rect(-200, 255, 2000, 256),
+            pygame.Rect(0, -200, 0, 2000),
+            pygame.Rect(255, -200, 0, 2000),
+        ]
+    elem["player"].size = (16, 16)
+    elem["map"] = elem["first_room"]
+    pygame.event.set_blocked(pygame.KEYDOWN)
+    pygame.event.set_allowed(pygame.QUIT)
+    elemToShow: List[Sprite] = [elem["map"]]
     elemToShow.append(elem["player"])
     while not len(list(filter(lambda a: a.type == pygame.QUIT, events))):
         size = screen.get_size()
+        if tick == 4 * FRAMERATE:
+            elem["map"] = elem["second_room"]
+            elemToShow[0] = elem["map"]
+            pygame.event.set_allowed(pygame.KEYDOWN)
         events = pygame.event.get()
         screen.fill("white")
         update_screen(screen, events, size, elem, elemToShow)
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(FRAMERATE)
+        tick += 1
     pygame.quit()
     pass
 
