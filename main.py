@@ -207,19 +207,24 @@ def main():
             elem["voleur"].reverse = False
             elem["voleur"].pos = (32, 232)
             elem["player"].pos = (209, 239)
+            if isinstance(elem["player"], Player):
+                elem["player"].speed = 0
             elemToShow.remove(elem["zombies"])
             elemToShow.remove(elem["soucoupe_volante"])
             elemToShow.remove(elem["pti_robot"])
             elemToShow.remove(elem["gros_cochon"])
             elemToShow.remove(elem["porte_fin"])
             elemToShow.append(elem["voleur"])
+            elemToShow[0] = elem["final_room"]
+            elem["map"] = elem["final_room"]
             startboss = False
             boss = True
         if endboss and tick > 5 * FRAMERATE:
+            pygame.event.set_blocked(pygame.KEYDOWN)
             elemToShow.remove(elem["final_room"])
             elemToShow.remove(elem["voleur"])
             elemToShow.remove(elem["player"])
-            elem["coffreFin"] = AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 2)
+            elem["coffreFin"] = AnimatedSprite(["assets/chest_open_16x.png", "assets/chest_front.png"], 8)
             elem["coffreFin"].pos = (53, 53)
             elem["coffreFin"].size = (150, 150)
             elemToShow.append(elem["coffreFin"])
@@ -230,11 +235,18 @@ def main():
             elem["player"].pos = (209, 239)
             elemToShow.remove(elem["coffreFin"])
             BACKGROUND = pygame.Color(255, 255, 255)
-            elemToShow.append(Sprite("assets/hoppy.png"))
+            elemToShow.append(Sprite("assets/secret.png"))
+            elemToShow[-1].pos = (0, 64)
+            elemToShow[-1].size = (256, 128)
             tick = 0
+            events = pygame.event.get()
+            screen.fill(BACKGROUND)
+            update_screen(screen, events, size, elem, elemToShow)
+            pygame.display.flip()
+            break
         if boss:
-            rect = pygame.Rect(32, 232, 32, 1)
-            rect2 = pygame.Rect(elem["player"].pos, elem["player"].size)
+            rect = pygame.Rect(38, 225, 13, 2)
+            rect2 = pygame.Rect(elem["player"].pos, (elem["player"].size[0], 1))
             if rect.colliderect(rect2):
                 endboss = True
                 boss = False
@@ -249,6 +261,9 @@ def main():
         pygame.display.flip()
         clock.tick(FRAMERATE)
         tick += 1
+    if (endboss):
+        while not len(list(filter(lambda a: a.type == pygame.QUIT, pygame.event.get()))):
+            pass
     pygame.quit()
     pass
 
