@@ -8,8 +8,8 @@ from map import Map
 
 GRAVITY: float = 9.8
 JUMP_HEIGHT = GRAVITY * 3
-SPRITES_STILL: PathLike = "./assets/sprite_sheet_chest.png"
-SPRITES_RIGHT: PathLike = "./assets/sprite_sheet_chest.png"
+SPRITES_STILL: PathLike = "./assets/chest_front.png"
+SPRITES_RIGHT: PathLike = "./assets/chest_direction_right.png"
 DIRECTION_LEFT: int = 1
 DIRECTION_RIGHT: int = 2
 DIRECTION_STILL: int = 3
@@ -94,7 +94,7 @@ class Player(AnimatedSprite):
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
              screen: pygame.Surface) -> None:
         debug(f"Showing player at {self.pos = } with {self.size = } and {self._direction = }")
-        if self._direction == DIRECTION_STILL:
+        if self._direction != DIRECTION_STILL:
             self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), SPRITES_RIGHT))
             Sprite.show(self, show_function, screen, self._direction == DIRECTION_LEFT)
         else:

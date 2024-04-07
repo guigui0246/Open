@@ -9,7 +9,9 @@ from sprite import Sprite
 log.print_to_stderr = False
 SIZE: tuple[int, int] = (256, 256)
 SCALE_DIFF_MAX: float = 1.45
-SPEED_VALUE = 1.25
+SPEED_VALUE: float = 0.3
+MIN_SPEED: float = 0.3
+SLOWDOWN: float = 1.65
 
 
 def make_show(scale_x: float, scale_y: float, margin_x: int, margin_y: int) -> Callable[
@@ -39,15 +41,25 @@ def update_screen(screen: pygame.Surface, events: List[pygame.event.Event], size
     debug("Margin (", margin_x, margin_y, "), Scale (", scale_x, scale_y, ")")
 
     for e in events:
-        if e.type == pygame.K_SPACE:
-            if isinstance(elem["player"], Player):
-                elem["player"].jump()
-        if e.type == pygame.K_RIGHT:
-            if isinstance(elem["player"], Player):
-                elem["player"].speed += SPEED_VALUE
-        if e.type == pygame.K_LEFT:
-            if isinstance(elem["player"], Player):
-                elem["player"].speed -= SPEED_VALUE
+        if e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_SPACE:
+                if isinstance(elem["player"], Player):
+                    elem["player"].jump()
+        debug(e)
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RIGHT]:
+        if isinstance(elem["player"], Player):
+            elem["player"].speed += SPEED_VALUE
+    if keys[pygame.K_LEFT]:
+        if isinstance(elem["player"], Player):
+            elem["player"].speed -= SPEED_VALUE
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+        if isinstance(elem["player"], Player):
+            if elem["player"].speed > MIN_SPEED:
+                elem["player"].speed /= SLOWDOWN
+            else:
+                elem["player"].speed = 0
 
     if isinstance(elem["player"], Player) and isinstance(elem["map"], Map):
         elem["player"].move(elem["map"])
