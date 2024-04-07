@@ -83,11 +83,13 @@ def main():
     elem: Dict[str, Sprite] = {
         "first_room": Map("assets/first_room.png"),
         "player": Player(3, (150, 150)),
-        "second_room": Map("assets/background_no_enemies_grey.png"),
+        "second_room": Map("assets/background_no_enemies.png"),
         "final_room": Map("assets/final_room.png"),
         "gros_cochon": Sprite("assets/gros_cochon.png"),
         "soucoupe_volante": Sprite("assets/soucoupe_volante.png"),
         "pti_robot": Sprite("assets/pti_robot.png"),
+        "porte_fin_ouverture": AnimatedSprite(["assets/pti_robot.png"], 3),
+        "porte_fin": Sprite("assets/pti_robot.png"),
         "zombies": AnimatedSprite(["assets/zombie_sprite_1.png", "assets/zombie_sprite_2.png"], 3),
         "voleur": AnimatedSprite(["assets/voleur.png", "assets/voleur_2.png", "assets/voleur_3.png"], 3),
         "voleur_crowbar": AnimatedSprite(["assets/voleur_crowbar.png", "assets/voleur_crowbar_2.png", "assets/voleur_crowbar_3.png"], 3),
@@ -118,6 +120,8 @@ def main():
     elem["pti_robot"].size = (31, 33)
     elem["gros_cochon"].pos = (81, 40)
     elem["gros_cochon"].size = (32, 32)
+    elem["gros_cochon"].pos = (7, 47)
+    elem["gros_cochon"].size = (32, 25)
     elem["coffre1"].pos = (28, 244)
     elem["coffre2"].pos = (72, 244)
     elem["coffre3"].pos = (120, 244)
@@ -152,6 +156,7 @@ def main():
             elemToShow.append(elem["soucoupe_volante"])
             elemToShow.append(elem["pti_robot"])
             elemToShow.append(elem["gros_cochon"])
+            elemToShow.append(elem["porte_fin"])
         events = pygame.event.get()
         screen.fill("white")
         update_screen(screen, events, size, elem, elemToShow)
