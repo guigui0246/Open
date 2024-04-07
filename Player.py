@@ -6,8 +6,8 @@ from debug import debug
 from sprite import AnimatedSprite, Sprite
 from map import Map
 
-GRAVITY: float = 9.8
-JUMP_HEIGHT = GRAVITY * 3
+GRAVITY: float = .2
+JUMP_HEIGHT = GRAVITY * 45
 SPRITES_STILL: PathLike = "./assets/chest_front.png"
 SPRITES_RIGHT: PathLike = "./assets/chest_direction_right.png"
 DIRECTION_LEFT: int = 1
@@ -60,7 +60,7 @@ class Player(AnimatedSprite):
         debug("Player move() call ")
         self._update_on_ground(map)
         debug(f"{self._on_ground}")
-        if self._on_ground:
+        if self._on_ground and self._jump <= 0:
             self._gravity = 0
             self._jump = 0
         else:
