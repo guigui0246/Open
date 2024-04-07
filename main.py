@@ -93,10 +93,10 @@ def main():
         "zombies": AnimatedSprite(["assets/zombie_sprite_1.png", "assets/zombie_sprite_2.png"], 3),
         "voleur": AnimatedSprite(["assets/voleur.png", "assets/voleur_2.png", "assets/voleur_3.png"], 3),
         "voleur_crowbar": AnimatedSprite(["assets/voleur_crowbar.png", "assets/voleur_crowbar_2.png", "assets/voleur_crowbar_3.png"], 3),
-        "coffre1": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1),
-        "coffre2": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/2),
-        "coffre3": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/3),
-        "coffre4": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/4),
+        "coffre1": AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 1),
+        "coffre2": AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 1/2),
+        "coffre3": AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 1/3),
+        "coffre4": AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 1/4),
     }
     if isinstance(elem["first_room"], Map):
         elem["first_room"].collisions = [pygame.Rect(-200, -200, 2000, 2000)]
