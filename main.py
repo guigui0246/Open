@@ -93,13 +93,13 @@ def main():
         elem["first_room"].collisions = [pygame.Rect(-200, -200, 2000, 2000)]
     if isinstance(elem["second_room"], Map):
         elem["second_room"].collisions = [
-            pygame.Rect(-200, 255, 2000, 256),
+            pygame.Rect(-200, 255, 2000, 2000),
             pygame.Rect(0, -200, 0, 2000),
             pygame.Rect(255, -200, 0, 2000),
         ]
     if isinstance(elem["final_room"], Map):
         elem["final_room"].collisions = [
-            pygame.Rect(-200, 255, 2000, 256),
+            pygame.Rect(-200, 255, 2000, 2000),
             pygame.Rect(0, -200, 0, 2000),
             pygame.Rect(255, -200, 0, 2000),
         ]
