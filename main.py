@@ -236,6 +236,11 @@ def main():
             if rect.colliderect(rect2):
                 endboss = True
                 boss = False
+        if elem["second_room"] in elemToShow:
+            rect = pygame.Rect(elem["porte_fin"].pos, elem["porte_fin"].size)
+            rect2 = pygame.Rect(elem["player"].pos, elem["player"].size)
+            if rect.colliderect(rect2):
+                startboss = True
         events = pygame.event.get()
         screen.fill(BACKGROUND)
         update_screen(screen, events, size, elem, elemToShow)
