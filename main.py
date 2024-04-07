@@ -13,6 +13,7 @@ SPEED_VALUE: float = 0.3
 MIN_SPEED: float = 0.3
 SLOWDOWN: float = 1.65
 FRAMERATE: int = 60
+BACKGROUND: pygame.Color = pygame.Color(0x74, 0x74, 0x74)
 
 
 def make_show(scale_x: float, scale_y: float, margin_x: int, margin_y: int) -> Callable[
@@ -89,7 +90,7 @@ def main():
         "soucoupe_volante": Sprite("assets/soucoupe_volante.png"),
         "pti_robot": Sprite("assets/pti_robot.png"),
         "porte_fin_ouverture": AnimatedSprite(["assets/pti_robot.png"], 3),
-        "porte_fin": Sprite("assets/pti_robot.png"),
+        "porte_fin": Sprite("assets/door_end_level.png"),
         "zombies": AnimatedSprite(["assets/zombie_sprite_1.png", "assets/zombie_sprite_2.png"], 3),
         "voleur": AnimatedSprite(["assets/voleur.png", "assets/voleur_2.png", "assets/voleur_3.png"], 3),
         "voleur_crowbar": AnimatedSprite(["assets/voleur_crowbar.png", "assets/voleur_crowbar_2.png", "assets/voleur_crowbar_3.png"], 3),
@@ -120,18 +121,23 @@ def main():
     elem["pti_robot"].size = (31, 33)
     elem["gros_cochon"].pos = (81, 40)
     elem["gros_cochon"].size = (32, 32)
-    elem["gros_cochon"].pos = (7, 47)
-    elem["gros_cochon"].size = (32, 25)
+    elem["porte_fin"].pos = (7, 47)
+    elem["porte_fin"].size = (32, 25)
+    elem["voleur_crowbar"].pos = (8, 225)
+    elem["voleur"].pos = (194, 225)
     elem["coffre1"].pos = (28, 244)
     elem["coffre2"].pos = (72, 244)
     elem["coffre3"].pos = (120, 244)
     elem["coffre4"].pos = (166, 244)
     elem["player"].pos = (214, 244)
+    elem["voleur_crowbar"].size = (32, 32)
+    elem["voleur"].size = (32, 32)
     elem["coffre1"].size = (16, 12)
     elem["coffre2"].size = (16, 12)
     elem["coffre3"].size = (16, 12)
     elem["coffre4"].size = (16, 12)
     elem["player"].size = (16, 12)
+    elem["voleur"].reverse = True
     elem["map"] = elem["first_room"]
     pygame.event.set_blocked(pygame.KEYDOWN)
     pygame.event.set_allowed(pygame.QUIT)
@@ -141,9 +147,37 @@ def main():
     elemToShow.append(elem["coffre2"])
     elemToShow.append(elem["coffre3"])
     elemToShow.append(elem["coffre4"])
+    elemToShow.append(elem["voleur_crowbar"])
+    startboss: bool = False
+    endboss: bool = False
     while not len(list(filter(lambda a: a.type == pygame.QUIT, events))):
         size = screen.get_size()
+        if tick == 1 * FRAMERATE:
+            if isinstance(elem["coffre1"], AnimatedSprite):
+                elem["coffre1"].framerate = 1 / 10
+            elem["voleur_crowbar"].pos = (52, 225)
+        if tick == 2 * FRAMERATE:
+            if isinstance(elem["coffre2"], AnimatedSprite):
+                elem["coffre2"].framerate = 1 / 10
+            elem["voleur_crowbar"].pos = (100, 225)
+        if tick == 3 * FRAMERATE:
+            if isinstance(elem["coffre3"], AnimatedSprite):
+                elem["coffre3"].framerate = 1 / 10
+            elem["voleur_crowbar"].pos = (146, 225)
         if tick == 4 * FRAMERATE:
+            if isinstance(elem["coffre4"], AnimatedSprite):
+                elem["coffre4"].framerate = 1 / 10
+            elem["voleur_crowbar"].pos = (194, 225)
+        if tick == 4.25 * FRAMERATE:
+            elemToShow.remove(elem["voleur_crowbar"])
+            elemToShow.append(elem["voleur"])
+        if tick == 4.4 * FRAMERATE:
+            elem["voleur"].pos = (100, 225)
+        if tick == 4.7 * FRAMERATE:
+            elem["voleur"].pos = (75, 225)
+        if tick == 4.9 * FRAMERATE:
+            elem["voleur"].pos = (-5, 225)
+        if tick == 5 * FRAMERATE:
             elem["map"] = elem["second_room"]
             elemToShow[0] = elem["map"]
             pygame.event.set_allowed(pygame.KEYDOWN)
@@ -152,13 +186,42 @@ def main():
             elemToShow.remove(elem["coffre2"])
             elemToShow.remove(elem["coffre3"])
             elemToShow.remove(elem["coffre4"])
+            elemToShow.remove(elem["voleur"])
             elemToShow.append(elem["zombies"])
             elemToShow.append(elem["soucoupe_volante"])
             elemToShow.append(elem["pti_robot"])
             elemToShow.append(elem["gros_cochon"])
             elemToShow.append(elem["porte_fin"])
+        if startboss:
+            elem["voleur"].reverse = False
+            elem["voleur"].pos = (32, 232)
+            elem["player"].pos = (209, 239)
+            elemToShow.remove(elem["zombies"])
+            elemToShow.remove(elem["soucoupe_volante"])
+            elemToShow.remove(elem["pti_robot"])
+            elemToShow.remove(elem["gros_cochon"])
+            elemToShow.remove(elem["porte_fin"])
+            elemToShow.append(elem["voleur"])
+            startboss = False
+        if endboss and tick > 5 * FRAMERATE:
+            elemToShow.remove(elem["final_room"])
+            elemToShow.remove(elem["voleur"])
+            elemToShow.remove(elem["player"])
+            elem["coffreFin"] = AnimatedSprite(["assets/chest_front.png", "assets/chest_open_16x.png"], 2)
+            elem["coffreFin"].pos = (53, 53)
+            elem["coffreFin"].size = (150, 150)
+            elemToShow.append(elem["coffreFin"])
+            tick = 0
+        if endboss and tick == 1 * FRAMERATE:
+            elem["voleur"].reverse = False
+            elem["voleur"].pos = (32, 232)
+            elem["player"].pos = (209, 239)
+            elemToShow.remove(elem["coffreFin"])
+            BACKGROUND = pygame.Color(255, 255, 255)
+            elemToShow.append(Sprite("assets/hoppy.png"))
+            tick = 0
         events = pygame.event.get()
-        screen.fill("white")
+        screen.fill(BACKGROUND)
         update_screen(screen, events, size, elem, elemToShow)
         pygame.display.flip()
         clock.tick(FRAMERATE)
