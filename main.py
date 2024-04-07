@@ -4,7 +4,7 @@ from Player import Player
 from map import Map
 import debug as log
 from debug import debug
-from sprite import Sprite
+from sprite import AnimatedSprite, Sprite
 
 log.print_to_stderr = False
 SIZE: tuple[int, int] = (256, 256)
@@ -87,7 +87,13 @@ def main():
         "final_room": Map("assets/final_room.png"),
         "gros_cochon": Sprite("assets/gros_cochon.png"),
         "pti_robot": Sprite("assets/pti_robot.png"),
-        "zombies": Sprite("assets/zombies.png"),
+        "zombies": AnimatedSprite(["assets/zombie_sprite_1.png", "assets/zombie_sprite_2.png"], 3),
+        "voleur": AnimatedSprite(["assets/voleur.png", "assets/voleur_2.png", "assets/voleur_3.png"], 3),
+        "voleur_crowbar": AnimatedSprite(["assets/voleur_crowbar.png", "assets/voleur_crowbar_2.png", "assets/voleur_crowbar_3.png"], 3),
+        "coffre1": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1),
+        "coffre2": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/2),
+        "coffre3": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/3),
+        "coffre4": AnimatedSprite(["assets/chest_front.png", "assets/zombies.png"], 1/4),
     }
     if isinstance(elem["first_room"], Map):
         elem["first_room"].collisions = [pygame.Rect(-200, -200, 2000, 2000)]
@@ -103,12 +109,25 @@ def main():
             pygame.Rect(0, -200, 0, 2000),
             pygame.Rect(255, -200, 0, 2000),
         ]
+    elem["coffre1"].pos = (28, 244)
+    elem["coffre2"].pos = (72, 244)
+    elem["coffre3"].pos = (120, 244)
+    elem["coffre4"].pos = (166, 244)
+    elem["player"].pos = (214, 244)
+    elem["coffre1"].size = (16, 16)
+    elem["coffre2"].size = (16, 16)
+    elem["coffre3"].size = (16, 16)
+    elem["coffre4"].size = (16, 16)
     elem["player"].size = (16, 16)
     elem["map"] = elem["first_room"]
     pygame.event.set_blocked(pygame.KEYDOWN)
     pygame.event.set_allowed(pygame.QUIT)
     elemToShow: List[Sprite] = [elem["map"]]
     elemToShow.append(elem["player"])
+    elemToShow.append(elem["coffre1"])
+    elemToShow.append(elem["coffre2"])
+    elemToShow.append(elem["coffre3"])
+    elemToShow.append(elem["coffre4"])
     while not len(list(filter(lambda a: a.type == pygame.QUIT, events))):
         size = screen.get_size()
         if tick == 4 * FRAMERATE:

@@ -2,6 +2,7 @@ from typing import Callable, Sequence
 import pygame
 import os
 import time
+from debug import debug
 
 
 class Sprite():
@@ -96,13 +97,16 @@ class AnimatedSprite(Sprite):
 
     def show(self, show_function: Callable[[pygame.Surface, pygame.Surface, tuple[int, int], tuple[int, int]], None],
              screen: pygame.Surface, reverse: bool = False) -> None:
+        debug(f"{time.time() - self._clock = } {len(self._asset_list) = } {(1 / self._speed) = }")
         while (time.time() - self._clock) > len(self._asset_list) * (1 / self._speed):
             self._clock += len(self._asset_list) * (1 / self._speed)
         while (time.time() - self._clock) > (1 / self._speed):
+            debug("Sprite change")
             self._asset_id += 1
             self._clock += (1 / self._speed)
-        if len(self._asset_list) >= self._asset_id:
+        if len(self._asset_list) <= self._asset_id:
             self._asset_id = 0
+        debug(f"Showing sprite with asset {self._asset_id = }")
         self._sprite = pygame.image.load(os.path.join(os.path.dirname(__file__), self._asset_list[self._asset_id]))
         Sprite.show(self, show_function, screen, reverse)
 
